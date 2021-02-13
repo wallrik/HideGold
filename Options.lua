@@ -27,8 +27,7 @@ end
 
 function addon.createOptionsButton(parent, labelText, tooltipText, smallText)
 	local checkButton = CreateFrame("CheckButton", nil, parent)
-	checkButton:SetWidth(26)
-	checkButton:SetHeight(26)
+	checkButton:SetSize(26,26)
 	checkButton:SetNormalTexture(130755) -- "Interface\\Buttons\\UI-CheckBox-Up"
 	checkButton:SetPushedTexture(130752) -- "Interface\\Buttons\\UI-CheckBox-Down"
 	checkButton:SetHighlightTexture(130753,"ADD") -- "Interface\\Buttons\\UI-CheckBox-Highlight"

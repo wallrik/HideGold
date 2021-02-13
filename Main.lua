@@ -99,4 +99,6 @@ local BackpackMoneyFrame_OnShow = function(self)
 	end
 end
 
-_G.ContainerFrame1MoneyFrame:HookScript("OnShow", BackpackMoneyFrame_OnShow)
+for i=1,13 do
+	_G["ContainerFrame".. i .."MoneyFrame"]:HookScript("OnShow", BackpackMoneyFrame_OnShow)
+end
