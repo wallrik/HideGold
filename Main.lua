@@ -13,7 +13,6 @@ buttonMail:SetPoint("TOPLEFT", buttonVendor, "BOTTOMLEFT", 0, -8)
 buttonBank:SetPoint("TOPLEFT", buttonMail, "BOTTOMLEFT", 0, -8)
 buttonAuction:SetPoint("TOPLEFT", buttonBank, "BOTTOMLEFT", 0, -8)
 buttonTrainer:SetPoint("TOPLEFT", buttonAuction, "BOTTOMLEFT", 0, -8)
-buttonTrainer:Disable()
 
 _G.SLASH_HIDEGOLD1 = "/hidegold"
 _G.SLASH_HIDEGOLD2 = "/goldhide"
@@ -29,10 +28,8 @@ end
 buttonBackpack.OnClick = function(_,isChecked)
 	if isChecked then
 		addonOptions.HideBackpack = true
-		_G.ContainerFrame1MoneyFrame:Hide()
 	else
 		addonOptions.HideBackpack = nil
-		_G.ContainerFrame1MoneyFrame:Show()
 	end
 end
 buttonVendor.OnClick = function(_,isChecked)
@@ -65,19 +62,31 @@ end
 buttonAuction.OnClick = function(_,isChecked)
 	if isChecked then
 		addonOptions.HideAuction = true
-		if _G.AuctionFrameMoneyFrame then _G.AuctionFrameMoneyFrame:Hide() end
-		if _G.IsAddOnLoaded("Auc-ScanData") then
-			_G.ChatFrame_DisplayUsageError("Autioneer is loaded! Please reload user interface.")
+		if _G.AuctionFrameMoneyFrame then
+			_G.AuctionFrameMoneyFrame:Hide()
+			_G.AuctionFrameMoneyFrame:SetAlpha(0)
 		end
 	else
 		addonOptions.HideAuction = nil
-		if _G.AuctionFrameMoneyFrame then _G.AuctionFrameMoneyFrame:Show() end
+		if _G.AuctionFrameMoneyFrame then
+			_G.AuctionFrameMoneyFrame:Show()
+			_G.AuctionFrameMoneyFrame:SetAlpha(1)
+		end
 	end
 end
-
-local AuctionFrameMoneyFrame_OnShow = function(self)
-	if addonOptions.HideAuction then
-		self:Hide()
+buttonTrainer.OnClick = function(_,isChecked)
+	if isChecked then
+		addonOptions.HideTrainer = true
+		if _G.AuctionFrameMoneyFrame then
+			_G.ClassTrainerMoneyFrame:Hide()
+			_G.ClassTrainerMoneyFrame:SetAlpha(0)
+		end
+	else
+		addonOptions.HideTrainer = nil
+		if _G.AuctionFrameMoneyFrame then
+			_G.ClassTrainerMoneyFrame:Show()
+			_G.ClassTrainerMoneyFrame:SetAlpha(1)
+		end
 	end
 end
 
@@ -95,12 +104,16 @@ eventFrame:SetScript("OnEvent", function(_,_,name)
 		if addonOptions.HideMail then buttonMail:Click() end
 		if addonOptions.HideBank then buttonBank:Click() end
 		if addonOptions.HideAuction then buttonAuction:Click() end
+		if addonOptions.HideTrainer then buttonTrainer:Click() end
 	elseif name == "Blizzard_AuctionUI" then
-		if addonOptions.HideAuction then _G.AuctionFrameMoneyFrame:Hide() end
-	elseif name == "Auc-ScanData" then -- Auctioneer
-		if _G.AuctionFrameMoneyFrame then
+		if addonOptions.HideAuction then
 			_G.AuctionFrameMoneyFrame:Hide()
-			_G.AuctionFrameMoneyFrame:HookScript("OnShow", AuctionFrameMoneyFrame_OnShow)
+			_G.AuctionFrameMoneyFrame:SetAlpha(0)
+		end
+	elseif name == "Blizzard_TrainerUI" then
+		if addonOptions.HideTrainer then 
+			_G.ClassTrainerMoneyFrame:Hide()
+			_G.ClassTrainerMoneyFrame:SetAlpha(0)
 		end
 	end
 end)
