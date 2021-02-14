@@ -1,6 +1,4 @@
-local addonName, addon = ...
-local addonOptions
-
+local addonName, addon, addonOptions = ...
 local optionsPanel = addon.createOptionsPanel()
 local buttonBackpack = addon.createOptionsButton(optionsPanel, "Hide in backpack", "Automatically hide gold in your backpack.")
 local buttonVendor = addon.createOptionsButton(optionsPanel, "Hide in vendor", "Automatically hide gold in the vendor frame.")
@@ -68,9 +66,18 @@ buttonAuction.OnClick = function(_,isChecked)
 	if isChecked then
 		addonOptions.HideAuction = true
 		if _G.AuctionFrameMoneyFrame then _G.AuctionFrameMoneyFrame:Hide() end
+		if _G.IsAddOnLoaded("Auc-ScanData") then
+			_G.ChatFrame_DisplayUsageError("Autioneer is loaded! Please reload user interface.")
+		end
 	else
 		addonOptions.HideAuction = nil
 		if _G.AuctionFrameMoneyFrame then _G.AuctionFrameMoneyFrame:Show() end
+	end
+end
+
+local AuctionFrameMoneyFrame_OnShow = function(self)
+	if addonOptions.HideAuction then
+		self:Hide()
 	end
 end
 
@@ -90,6 +97,11 @@ eventFrame:SetScript("OnEvent", function(_,_,name)
 		if addonOptions.HideAuction then buttonAuction:Click() end
 	elseif name == "Blizzard_AuctionUI" then
 		if addonOptions.HideAuction then _G.AuctionFrameMoneyFrame:Hide() end
+	elseif name == "Auc-ScanData" then -- Auctioneer
+		if _G.AuctionFrameMoneyFrame then
+			_G.AuctionFrameMoneyFrame:Hide()
+			_G.AuctionFrameMoneyFrame:HookScript("OnShow", AuctionFrameMoneyFrame_OnShow)
+		end
 	end
 end)
 
